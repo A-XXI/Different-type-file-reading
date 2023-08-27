@@ -5,10 +5,8 @@ from mysql.connector import Error
 
 def upload_file_to_mysql(file_path):
     try:
-        # Extract file extension
         file_extension = os.path.splitext(file_path)[1].lower()
 
-        # Read the file content using pandas
         if file_extension == '.csv':
             df = pd.read_csv(file_path, sep=',', skiprows=0, header=0)
         elif file_extension == '.xml':
@@ -23,7 +21,7 @@ def upload_file_to_mysql(file_path):
             print("Unsupported file format.")
             return
 
-        # Connect to MySQL server
+        # Connect to server
         connection = mysql.connector.connect(
             host='your_host',
             database='your_database',
@@ -32,11 +30,11 @@ def upload_file_to_mysql(file_path):
         )
 
         if connection.is_connected():
-            # Upload data to MySQL using pandas' to_sql method
+            # Upload data
             df.to_sql('your_table_name', connection, if_exists='append', index=False)
 
             print("File content uploaded successfully.")
-
+        
     except Error as e:
         print("Error:", e)
 
@@ -46,4 +44,4 @@ def upload_file_to_mysql(file_path):
             print("MySQL connection is closed.")
 
 # Call the function with the file path
-upload_file_to_mysql('data.json')  # Change to your JSON file path
+upload_file_to_mysql('data.json')
